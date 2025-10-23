@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 import java.util.List;
 
 public class ProductsPage {
@@ -25,6 +26,15 @@ public class ProductsPage {
 
   @FindBy(id = "logout_sidebar_link")
   private WebElement logoutLink;
+
+  @FindBy(className = "product_sort_container")
+  private WebElement filterDropdown;
+
+  @FindBy(className = "inventory_item_name")
+  private List<WebElement> productNames;
+
+  @FindBy(className = "inventory_item_price")
+  private List<WebElement> productPrices;
 
   public ProductsPage(WebDriver driver) {
     this.driver = driver;
@@ -60,5 +70,67 @@ public class ProductsPage {
 
   public int getProductCount() {
     return productItems.size();
+  }
+
+  // Filter methods
+  public void filterBy(String filterOption) {
+    Select filterSelect = new Select(filterDropdown);
+    filterSelect.selectByVisibleText(filterOption);
+  }
+
+  // Get product names in current order
+  public List<String> getProductNames() {
+    return productNames.stream().map(WebElement::getText).toList();
+  }
+
+  // Get product prices in current order
+  public List<Double> getProductPrices() {
+    return productPrices.stream()
+        .map(price -> Double.parseDouble(price.getText().replace("$", "")))
+        .toList();
+  }
+
+  // Check if products are sorted by price low to high
+  public boolean isSortedByPriceLowToHigh() {
+    List<Double> prices = getProductPrices();
+    for (int i = 0; i < prices.size() - 1; i++) {
+      if (prices.get(i) > prices.get(i + 1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Check if products are sorted by price high to low
+  public boolean isSortedByPriceHighToLow() {
+    List<Double> prices = getProductPrices();
+    for (int i = 0; i < prices.size() - 1; i++) {
+      if (prices.get(i) < prices.get(i + 1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Check if products are sorted by name A to Z
+  public boolean isSortedByNameAToZ() {
+    List<String> names = getProductNames();
+    for (int i = 0; i < names.size() - 1; i++) {
+      if (names.get(i).compareTo(names.get(i + 1)) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Check if products are sorted by name Z to A
+  public boolean isSortedByNameZToA() {
+    List<String> names = getProductNames();
+    for (int i = 0; i < names.size() - 1; i++) {
+      if (names.get(i).compareTo(names.get(i + 1)) < 0) {
+        return false;
+      }
+    }
+    return true;
   }
 }

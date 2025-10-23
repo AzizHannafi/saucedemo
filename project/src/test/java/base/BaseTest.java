@@ -18,6 +18,9 @@ public class BaseTest {
 
     ChromeOptions options = new ChromeOptions();
     options.addArguments("--incognito");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments("--remote-allow-origins=*");
 
     driver = new ChromeDriver(options);
     driver.manage().window().maximize();
