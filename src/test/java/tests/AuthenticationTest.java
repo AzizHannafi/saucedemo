@@ -81,4 +81,23 @@ public class AuthenticationTest extends BaseTest {
     assertTrue("Field validation message should be displayed",
             !validationMessage.isEmpty());
   }
+
+    @Test
+    public void testSessionPersistenceAfterLogin() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.navigateToLoginPage();
+
+        // 1. Connexion avec des identifiants valides
+        loginPage.login(TestData.VALID_USERNAME, TestData.VALID_PASSWORD);
+
+        // 2. Vérifier qu’on est sur le Dashboard
+        DashboardPage dashboardPage = new DashboardPage(driver);
+        assertTrue("Dashboard page should be displayed", dashboardPage.isDashboardPageDisplayed());
+
+        // 3. Rafraîchir la page
+        driver.navigate().refresh();
+
+        // 4. Vérifier qu'on reste toujours sur le Dashboard
+        assertTrue("Dashboard should still be displayed after refresh", dashboardPage.isDashboardPageDisplayed());
+    }
 }
