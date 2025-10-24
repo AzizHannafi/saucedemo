@@ -21,10 +21,16 @@ public class BaseTest {
     options.addArguments("--no-sandbox");
     options.addArguments("--disable-dev-shm-usage");
     options.addArguments("--remote-allow-origins=*");
+    options.addArguments("--start-maximized");
+
+    // Désactiver les extensions qui pourraient interférer
+    options.addArguments("--disable-extensions");
+    options.addArguments("--disable-plugins");
 
     driver = new ChromeDriver(options);
     driver.manage().window().maximize();
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
   }
 
   @After
