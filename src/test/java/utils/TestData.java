@@ -15,4 +15,8 @@ public class TestData {
   // PIM Search Data
   public static final String PIM_SEARCH_EMPLOYEE_NAME = "John";
   public static final String PIM_EXPECTED_EMPLOYEE_NAME = "John Doe";
+
+  public static final String NONEXISTENT_EMPLOYEE_NAME = "NonexistentEmployee";
+  public static final String EMPTY_USERNAME = "";
+  public static final String EMPTY_PASSWORD = "";
 }

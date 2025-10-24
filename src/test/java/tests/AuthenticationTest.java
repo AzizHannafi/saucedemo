@@ -44,4 +44,41 @@ public class AuthenticationTest extends BaseTest {
 
     assertTrue("Should be back on login page", loginPage.isLoginPageDisplayed());
   }
+
+  @Test
+  public void testLoginWithEmptyUsername() {
+    LoginPage loginPage = new LoginPage(driver);
+    loginPage.navigateToLoginPage();
+
+    // Tentative de login avec username vide
+    loginPage.login(TestData.EMPTY_USERNAME, TestData.VALID_PASSWORD);
+
+    // Vérifier qu'on reste sur la page de login
+    assertTrue("Login page should still be displayed", loginPage.isLoginPageDisplayed());
+
+    // Vérifier le message de validation de champ avec la nouvelle méthode
+    String validationMessage = loginPage.getFieldValidationMessage();
+    assertTrue("Field validation message should be displayed",
+            !validationMessage.isEmpty());
+
+    // Log supplémentaire pour debug
+    System.out.println("Validation message: " + validationMessage);
+  }
+
+  @Test
+  public void testLoginWithEmptyPassword() {
+    LoginPage loginPage = new LoginPage(driver);
+    loginPage.navigateToLoginPage();
+
+    // Tentative de login avec password vide
+    loginPage.login(TestData.VALID_USERNAME, TestData.EMPTY_PASSWORD);
+
+    // Vérifier qu'on reste sur la page de login
+    assertTrue("Login page should still be displayed", loginPage.isLoginPageDisplayed());
+
+    // Vérifier le message de validation
+    String validationMessage = loginPage.getFieldValidationMessage();
+    assertTrue("Field validation message should be displayed",
+            !validationMessage.isEmpty());
+  }
 }

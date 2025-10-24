@@ -74,4 +74,30 @@ public class PimPage {
 
     return (firstName + " " + lastName).trim();
   }
+
+  public boolean isNoRecordsFound() {
+    try {
+      // Essayer plusieurs sélecteurs possibles pour "No Records Found"
+      By[] noRecordsSelectors = {
+              By.xpath("//span[contains(text(), 'No Records Found')]"),
+              By.xpath("//div[contains(text(), 'No Records Found')]"),
+              By.cssSelector(".oxd-text--span"),
+              By.xpath("//div[contains(@class, 'orangehrm-horizontal-padding')]//span[contains(@class, 'oxd-text')]")
+      };
+
+      for (By selector : noRecordsSelectors) {
+        try {
+          WebElement element = driver.findElement(selector);
+          if (element.isDisplayed() && element.getText().contains("No Records")) {
+            return true;
+          }
+        } catch (Exception e) {
+          // Continuer avec le sélecteur suivant
+        }
+      }
+      return false;
+    } catch (Exception e) {
+      return false;
+    }
+  }
 }

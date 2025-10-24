@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -57,5 +58,32 @@ public class LoginPage {
   public boolean isLoginPageDisplayed() {
     wait.until(ExpectedConditions.visibilityOf(loginPageHeader));
     return loginPageHeader.isDisplayed() && loginPageHeader.getText().equals("Login");
+  }
+
+  public String getFieldValidationMessage() {
+    try {
+      // Essayer différents sélecteurs pour les messages de validation
+      By[] validationSelectors = {
+              By.cssSelector(".oxd-input-field-error-message"),
+              By.cssSelector(".oxd-text--input-error"),
+              By.xpath("//span[contains(@class, 'oxd-text--input-error')]"),
+              By.cssSelector("[role='alert']"),
+              By.cssSelector(".oxd-form-request")
+      };
+
+      for (By selector : validationSelectors) {
+        try {
+          WebElement validationMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+          if (validationMessage.isDisplayed()) {
+            return validationMessage.getText();
+          }
+        } catch (Exception e) {
+          // Continuer avec le sélecteur suivant
+        }
+      }
+      return "";
+    } catch (Exception e) {
+      return "";
+    }
   }
 }
