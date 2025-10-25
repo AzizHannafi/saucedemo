@@ -25,7 +25,6 @@ public class LoginPage {
   @FindBy(css = "button[type='submit']")
   private WebElement loginButton;
 
-  // --- THIS IS THE CORRECTED LINE ---
   @FindBy(css = ".oxd-alert-content-text")
   private WebElement errorMessage;
 
@@ -43,14 +42,12 @@ public class LoginPage {
   }
 
   public void login(String username, String password) {
-    // Wait for fields to be visible
     wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
     passwordField.sendKeys(password);
     loginButton.click();
   }
 
   public String getErrorMessage() {
-    // This wait will now find the <p> tag and pass
     wait.until(ExpectedConditions.visibilityOf(errorMessage));
     return errorMessage.getText();
   }
@@ -62,7 +59,6 @@ public class LoginPage {
 
   public String getFieldValidationMessage() {
     try {
-      // Essayer différents sélecteurs pour les messages de validation
       By[] validationSelectors = {
               By.cssSelector(".oxd-input-field-error-message"),
               By.cssSelector(".oxd-text--input-error"),
@@ -78,7 +74,7 @@ public class LoginPage {
             return validationMessage.getText();
           }
         } catch (Exception e) {
-          // Continuer avec le sélecteur suivant
+
         }
       }
       return "";

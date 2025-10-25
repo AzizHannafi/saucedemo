@@ -50,18 +50,13 @@ public class AuthenticationTest extends BaseTest {
     LoginPage loginPage = new LoginPage(driver);
     loginPage.navigateToLoginPage();
 
-    // Tentative de login avec username vide
     loginPage.login(TestData.EMPTY_USERNAME, TestData.VALID_PASSWORD);
 
-    // Vérifier qu'on reste sur la page de login
     assertTrue("Login page should still be displayed", loginPage.isLoginPageDisplayed());
 
-    // Vérifier le message de validation de champ avec la nouvelle méthode
     String validationMessage = loginPage.getFieldValidationMessage();
-    assertTrue("Field validation message should be displayed",
-            !validationMessage.isEmpty());
+    assertTrue("Field validation message should be displayed", !validationMessage.isEmpty());
 
-    // Log supplémentaire pour debug
     System.out.println("Validation message: " + validationMessage);
   }
 
@@ -70,34 +65,28 @@ public class AuthenticationTest extends BaseTest {
     LoginPage loginPage = new LoginPage(driver);
     loginPage.navigateToLoginPage();
 
-    // Tentative de login avec password vide
     loginPage.login(TestData.VALID_USERNAME, TestData.EMPTY_PASSWORD);
 
-    // Vérifier qu'on reste sur la page de login
     assertTrue("Login page should still be displayed", loginPage.isLoginPageDisplayed());
 
-    // Vérifier le message de validation
     String validationMessage = loginPage.getFieldValidationMessage();
-    assertTrue("Field validation message should be displayed",
-            !validationMessage.isEmpty());
+    assertTrue("Field validation message should be displayed", !validationMessage.isEmpty());
   }
 
-    @Test
-    public void testSessionPersistenceAfterLogin() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.navigateToLoginPage();
+  @Test
+  public void testSessionPersistenceAfterLogin() {
+    LoginPage loginPage = new LoginPage(driver);
+    loginPage.navigateToLoginPage();
 
-        // 1. Connexion avec des identifiants valides
-        loginPage.login(TestData.VALID_USERNAME, TestData.VALID_PASSWORD);
+    loginPage.login(TestData.VALID_USERNAME, TestData.VALID_PASSWORD);
 
-        // 2. Vérifier qu’on est sur le Dashboard
-        DashboardPage dashboardPage = new DashboardPage(driver);
-        assertTrue("Dashboard page should be displayed", dashboardPage.isDashboardPageDisplayed());
+    DashboardPage dashboardPage = new DashboardPage(driver);
+    assertTrue("Dashboard page should be displayed", dashboardPage.isDashboardPageDisplayed());
 
-        // 3. Rafraîchir la page
-        driver.navigate().refresh();
+    driver.navigate().refresh();
 
-        // 4. Vérifier qu'on reste toujours sur le Dashboard
-        assertTrue("Dashboard should still be displayed after refresh", dashboardPage.isDashboardPageDisplayed());
-    }
+    assertTrue(
+        "Dashboard should still be displayed after refresh",
+        dashboardPage.isDashboardPageDisplayed());
+  }
 }

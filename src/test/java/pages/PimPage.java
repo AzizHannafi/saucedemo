@@ -28,7 +28,7 @@ public class PimPage {
   private WebElement searchButton;
 
   @FindBy(css = ".orangehrm-horizontal-padding.orangehrm-vertical-padding span.oxd-text")
-  private WebElement recordFoundText; // e.g., "(1) Record Found"
+  private WebElement recordFoundText;
 
   @FindBy(
       xpath =
@@ -53,26 +53,20 @@ public class PimPage {
 
   public void searchForEmployee(String nameHint) {
     try {
-      // Attendre et remplir le champ nom
       wait.until(ExpectedConditions.elementToBeClickable(employeeNameInput));
       employeeNameInput.clear();
       employeeNameInput.sendKeys(nameHint);
 
-      // Attendre un peu pour les suggestions (si elles apparaissent)
       Thread.sleep(2000);
 
-      // Essayer de trouver et cliquer sur une suggestion d'autocomplete
       By suggestionLocator = By.xpath("//div[@role='listbox']//span[contains(text(), '" + nameHint + "')]");
       List<WebElement> suggestions = driver.findElements(suggestionLocator);
 
       if (!suggestions.isEmpty() && suggestions.get(0).isDisplayed()) {
-        // Si une suggestion est trouvée, cliquer dessus
         suggestions.get(0).click();
       } else {
-        // Si aucune suggestion n'est trouvée, on continue sans erreur
         System.out.println("No autocomplete suggestions found for: " + nameHint + ". Continuing with search...");
 
-        // Optionnel: appuyer sur ESC pour fermer le dropdown s'il est ouvert
         try {
           employeeNameInput.sendKeys(org.openqa.selenium.Keys.ESCAPE);
         } catch (Exception e) {
@@ -80,18 +74,15 @@ public class PimPage {
         }
       }
 
-      // Cliquer sur le bouton search dans tous les cas
       wait.until(ExpectedConditions.elementToBeClickable(searchButton));
       searchButton.click();
 
-      // Attendre le chargement
       waitForLoadingToDisappear();
 
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException("Search interrupted", e);
     } catch (Exception e) {
-      // En cas d'autre erreur, essayer de continuer avec le search
       System.out.println("Error during search, attempting to continue: " + e.getMessage());
       try {
         wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
@@ -104,17 +95,13 @@ public class PimPage {
 
   public String getFirstEmployeeNameFromResult() {
     try {
-      // Attendre que les résultats soient chargés
       wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".oxd-loading-spinner")));
 
-      // Attendre le texte "Record Found"
       wait.until(ExpectedConditions.textToBePresentInElement(recordFoundText, "Record"));
 
-      // Attendre que les cellules du tableau soient visibles
       wait.until(ExpectedConditions.visibilityOf(firstResultFirstNameCellContent));
       wait.until(ExpectedConditions.visibilityOf(firstResultLastNameCellContent));
 
-      // Petite pause pour s'assurer que le texte est chargé
       Thread.sleep(500);
 
       String firstName = firstResultFirstNameCellContent.getText().trim();
@@ -132,10 +119,8 @@ public class PimPage {
 
   public boolean isNoRecordsFound() {
     try {
-      // Attendre que les résultats se chargent
       wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".oxd-loading-spinner")));
 
-      // Essayer plusieurs sélecteurs pour "No Records Found"
       By[] noRecordsSelectors = {
               By.xpath("//span[contains(text(), 'No Records Found')]"),
               By.xpath("//div[contains(text(), 'No Records Found')]"),
@@ -164,7 +149,6 @@ public class PimPage {
   }
   private void waitForLoadingToDisappear() {
     try {
-      // Attendre que le spinner disparaisse
       By loadingSpinner = By.cssSelector(".oxd-loading-spinner, .oxd-loading-spinner-container");
       wait.until(ExpectedConditions.invisibilityOfElementLocated(loadingSpinner));
       Thread.sleep(1000);
